@@ -1,0 +1,9 @@
+Poll Application
+----------------
+
+This is the beginnings of a polling web application designed to allow a user to create a poll and then have multiple people vote on the poll. The application collects the results and produces a summary.
+
+This project currently uses Maven to build. You can download Maven from http://maven.apache.org/ and run the compile/test with:
+
+    $ mvn install
+
