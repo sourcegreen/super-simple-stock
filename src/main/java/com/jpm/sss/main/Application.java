@@ -25,7 +25,7 @@ public class Application {
 		DataSource dataSource = new DataSourceImpl();
 		StockService stockService = new StockServiceImpl(dataSource);
 		
-		// Refine StockType
+		// Define StockType
 		StockType common = new StockType("Common");
 		StockType preferred = new StockType("Preferred");
 		
