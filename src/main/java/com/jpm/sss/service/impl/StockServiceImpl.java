@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.jpm.sss.dao.DataSource;
+import com.jpm.sss.exception.DuplicateStockSymbolException;
 import com.jpm.sss.exception.StockNotFoundException;
 import com.jpm.sss.exception.StockTradesNotFoundException;
 import com.jpm.sss.model.Stock;
@@ -22,8 +23,14 @@ public class StockServiceImpl implements StockService {
 		this.dataSource = dataSource;
 	}
 	
-	public void addStock(Stock stock) {
-		dataSource.addStock(stock);
+	public void addStock(Stock stock) throws DuplicateStockSymbolException {
+		try {
+			this.getStock(stock.getSymbol());
+			throw new DuplicateStockSymbolException("Stock exists already with symbol "+stock.getSymbol());
+			
+		} catch (StockNotFoundException e) {
+			dataSource.addStock(stock);
+		}
 	}
 
 	public Stock getStock(String stockSymbol) throws StockNotFoundException {
@@ -58,6 +65,9 @@ public class StockServiceImpl implements StockService {
 		
 		// Get trades recorded for the stock
 		List<Trade> stockTrades = this.getStockTrade(stockSymbol);
+		if(stockTrades == null) {
+			throw new StockTradesNotFoundException("No trades found for stock symbol: " + stockSymbol);
+		}
 		
 		// sort the tradesList according to the time descending
 		Collections.sort(stockTrades, Collections.reverseOrder(new TradeTimeStampComparator()));
@@ -78,14 +88,13 @@ public class StockServiceImpl implements StockService {
 			}
 		}
 			
-		// if some trades found, return volume Weighted Stock Price
-		if(sigmaQuantity > 0) {
-			return sigmaTradePriceQuntity / sigmaQuantity;
-
 		// No trades found in last five minutes
-		} else {
-			throw new StockTradesNotFoundException(
-				"Volume Weighted Stock Price not calculated as no trade found in last 5 minutes - Sigma Quantity:"+sigmaQuantity);
+		if(sigmaQuantity == 0) {
+			throw new StockTradesNotFoundException("No trade found in last 5 minutes for stock symbol: "+ stockSymbol);
+
+		// if some trades found, return volume Weighted Stock Price
+		} else { 
+			return sigmaTradePriceQuntity / sigmaQuantity;
 		}
 	}
 	

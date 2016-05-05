@@ -12,7 +12,6 @@ public class Stock {
 	private double fixedDividend;	// value in pennies
 	private long parValue;			// value in pennies
 	
-	public Stock() {}
 	
 	public Stock(String symbol, StockType stockType, long lastDividend, long parValue) {
 		this.setSymbol(symbol);

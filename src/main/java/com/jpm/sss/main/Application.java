@@ -7,6 +7,7 @@ import java.util.Random;
 
 import com.jpm.sss.dao.DataSource;
 import com.jpm.sss.dao.impl.DataSourceImpl;
+import com.jpm.sss.exception.DuplicateStockSymbolException;
 import com.jpm.sss.exception.StockNotFoundException;
 import com.jpm.sss.exception.StockTradesNotFoundException;
 import com.jpm.sss.exception.StockTypeNotDefinedException;
@@ -30,11 +31,17 @@ public class Application {
 		StockType preferred = new StockType("Preferred");
 		
 		// Record Stock data
-		stockService.addStock(new Stock("TEA", common, 0, 100));
-		stockService.addStock(new Stock("POP", common, 8, 100));
-		stockService.addStock(new Stock("ALE", common, 23,  60));
-		stockService.addStock(new Stock("GIN", preferred, 8, 0.2, 100));  
-		stockService.addStock(new Stock("JOE", common, 13, 250));
+		try {
+			stockService.addStock(new Stock("TEA", common, 0, 100));
+			stockService.addStock(new Stock("POP", common, 8, 100));
+			stockService.addStock(new Stock("ALE", common, 23,  60));
+			stockService.addStock(new Stock("GIN", preferred, 8, 0.2, 100));  
+			stockService.addStock(new Stock("JOE", common, 13, 250));
+			
+		} catch (DuplicateStockSymbolException e) {
+			System.out.println(e.getMessage());
+		}
+
 
 		// Retrieve stock data and perform the required operations.
 		Collection<Stock> stockList = stockService.getAllStock();

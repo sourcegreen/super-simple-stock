@@ -10,8 +10,6 @@ public class Trade {
 	private boolean buyOrSell; 		// boolean value - true if buying, false otherwise
 	private String stockSymbol;
 	
-	public Trade() {
-	}
 	
 	public Trade(String stockSymbol, Date timeStamp, long quantity, double price, boolean BuyOrSell) {
 		this.setStockSymbol(stockSymbol);
